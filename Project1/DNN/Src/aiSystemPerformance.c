@@ -627,7 +627,7 @@ __STATIC_INLINE void aiPrintLayoutBuffer(const char *msg, int idx,
         if (AI_BUFFER_META_INFO_INTQ(buffer->meta_info)) {
             ai_float scale = AI_BUFFER_META_INFO_INTQ_GET_SCALE(buffer->meta_info, 0);
             int zero_point = AI_BUFFER_META_INFO_INTQ_GET_ZEROPOINT(buffer->meta_info, 0);
-            printf(" scale=%f, zero=%d,", scale, zero_point);
+            printf("scale=%f, zero=%d,", scale, zero_point);
         } else {
             printf("Q%d.%d,",
                     (int)AI_BUFFER_FMT_GET_BITS(buffer->format)
@@ -1334,79 +1334,120 @@ int aiSystemPerformanceInit(void)
 
 int aiSystemPerformanceProcess(void)
 {
-    int r;
+
     int idx = 0;
+    int batch = 0;
+    int y_pred;
+    ai_buffer ai_input[AI_MNETWORK_IN_NUM];
+    ai_buffer ai_output[AI_MNETWORK_OUT_NUM];
 
-    do {
-        r = aiTestPerformance(idx);
-        idx = (idx+1) % AI_MNETWORK_NUMBER;
+    ai_float input[1] = {0};  // initial
+    ai_float output[1] = {0};
 
-        if (!r) {
-            r = aiTestConsole();
+    if (net_exec_ctx[idx].handle == AI_HANDLE_NULL)
+    {
+        printf("E: network handle is NULL\r\n");
+        return -1;
+    }
 
-            if (r == CONS_EVT_UNDEFINED) {
-                r = 0;
-            } else if (r == CONS_EVT_HELP) {
-                printf("\r\n");
-                printf("Possible key for the interactive console:\r\n");
-                printf("  [q,Q]      quit the application\r\n");
-                printf("  [r,R]      re-start (NN de-init and re-init)\r\n");
-                printf("  [p,P]      pause\r\n");
-                printf("  [d,D]      hide detailed information ('r' to restore)\r\n");
-                printf("  [h,H,?]    this information\r\n");
-                printf("   xx        continue immediately\r\n");
-                printf("\r\n");
-                printf("Press any key to continue..\r\n");
+    ai_input[0] = net_exec_ctx[idx].report.inputs[0];
+    ai_output[0] = net_exec_ctx[idx].report.outputs[0];
 
-                while ((r = aiTestConsole()) == CONS_EVT_TIMEOUT) {
-                    HAL_Delay(1000);
-                }
-                if (r == CONS_EVT_UNDEFINED)
-                    r = 0;
-            }
-            if (r == CONS_EVT_PROF) {
-                profiling_mode = true;
-                profiling_factor *= 2;
-                r = 0;
-            }
+//    ai_float test_data[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
-            if (r == CONS_EVT_HIDE) {
-            	hidden_mode = true;
-            	r = 0;
-            }
+    for (int i=0; i < 999; i++)
+    {
+    	input[0] = rand()%20 - 15;  // 随机生成[-10, 10] 的值
+    	output[0] = 0;
+    	ai_input[0].data = AI_HANDLE_PTR(input);
+    	ai_output[0].data = AI_HANDLE_PTR(output);
+    	batch = ai_mnetwork_run(net_exec_ctx[idx].handle, &ai_input[0], &ai_output[0]);
+    	if (batch != 1)
+    	{
+    		aiLogErr(ai_mnetwork_get_error(net_exec_ctx[idx].handle),
+    				"ai_mnetwork_run");
+    		break;
+    	}
+    	y_pred = 6 * input[0] + 10;
+    	printf("input  : %.2f \r\n", input[0]);
+    	printf("y_pre  : %.2f \r\n", output[0]);
+    	printf("y_true : %d \r\n", y_pred);
+    	printf("\r\n===========================\r\n\r\n\r\n");
+    	HAL_Delay(5000);
+    }
 
-            if (r == CONS_EVT_RESTART) {
-                profiling_mode = false;
-            	hidden_mode = false;
-                profiling_factor = 5;
-                printf("\r\n");
-                aiDeInit();
-                aiSystemPerformanceInit();
-                r = 0;
-            }
-            if (r == CONS_EVT_QUIT) {
-                profiling_mode = false;
-                printf("\r\n");
-                disableInts();
-                aiDeInit();
-                printf("\r\n");
-                printf("Board should be reseted...\r\n");
-                while (1) {
-                    HAL_Delay(1000);
-                }
-            }
-            if (r == CONS_EVT_PAUSE) {
-                printf("\r\n");
-                printf("Press any key to continue..\r\n");
-                while ((r = aiTestConsole()) == CONS_EVT_TIMEOUT) {
-                    HAL_Delay(1000);
-                }
-                r = 0;
-            }
-        }
-    } while (r==0);
+//    int r;
+//    do {
+//        r = aiTestPerformance(idx);
+//        idx = (idx+1) % AI_MNETWORK_NUMBER;
+//
+//        if (!r) {
+//            r = aiTestConsole();
+//
+//            if (r == CONS_EVT_UNDEFINED) {
+//                r = 0;
+//            } else if (r == CONS_EVT_HELP) {
+//                printf("\r\n");
+//                printf("Possible key for the interactive console:\r\n");
+//                printf("  [q,Q]      quit the application\r\n");
+//                printf("  [r,R]      re-start (NN de-init and re-init)\r\n");
+//                printf("  [p,P]      pause\r\n");
+//                printf("  [d,D]      hide detailed information ('r' to restore)\r\n");
+//                printf("  [h,H,?]    this information\r\n");
+//                printf("   xx        continue immediately\r\n");
+//                printf("\r\n");
+//                printf("Press any key to continue..\r\n");
+//
+//                while ((r = aiTestConsole()) == CONS_EVT_TIMEOUT) {
+//                    HAL_Delay(1000);
+//                }
+//                if (r == CONS_EVT_UNDEFINED)
+//                    r = 0;
+//            }
+//            if (r == CONS_EVT_PROF) {
+//                profiling_mode = true;
+//                profiling_factor *= 2;
+//                r = 0;
+//            }
+//
+//            if (r == CONS_EVT_HIDE) {
+//            	hidden_mode = true;
+//            	r = 0;
+//            }
+//
+//            if (r == CONS_EVT_RESTART) {
+//                profiling_mode = false;
+//            	hidden_mode = false;
+//                profiling_factor = 5;
+//                printf("\r\n");
+//                aiDeInit();
+//                aiSystemPerformanceInit();
+//                r = 0;
+//            }
+//            if (r == CONS_EVT_QUIT) {
+//                profiling_mode = false;
+//                printf("\r\n");
+//                disableInts();
+//                aiDeInit();
+//                printf("\r\n");
+//                printf("Board should be reseted...\r\n");
+//                while (1) {
+//                    HAL_Delay(1000);
+//                }
+//            }
+//            if (r == CONS_EVT_PAUSE) {
+//                printf("\r\n");
+//                printf("Press any key to continue..\r\n");
+//                while ((r = aiTestConsole()) == CONS_EVT_TIMEOUT) {
+//                    HAL_Delay(1000);
+//                }
+//                r = 0;
+//            }
+//        }
+//    } while (r==0);
+//
+//    return r;
 
-    return r;
 }
 
 void aiSystemPerformanceDeInit(void)
