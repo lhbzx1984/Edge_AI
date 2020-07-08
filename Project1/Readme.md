@@ -50,6 +50,8 @@
 
   ![NO9x8x.png](https://s1.ax1x.com/2020/07/03/NO9x8x.png)
 
+  ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200708160551.png)
+
 ## 1.2 在 PC 端搭建极简神经网络
 
 首先将如下开源仓库克隆到本地：
@@ -211,7 +213,71 @@ https://github.com/Lebhoryi/Edge_AI/tree/master/Project1/model
 
 可以看到我们的 AI 模型已经在开发板上欢快地跑了起来 ！！！
 
-# 0x04 参考文章
+# 0x04 显示神经网络的输入和输出
+
+在`main.c` 函数中找到下面这一行:
+
+![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200708185537.png)
+
+函数内部跳转, 跳转到定义 `MX_X_CUBE_AI_Process(void)` 的地方
+
+![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200708185809.png)
+
+继续跳转,找到这个函数`aiSystemPerformanceProcess()`
+
+下面是做了更改之后的代码, 其他部分没有做任何更改:
+
+```c
+int aiSystemPerformanceProcess(void)
+{
+    int idx = 0;
+    int batch = 0;
+    int y_pred;
+    ai_buffer ai_input[AI_MNETWORK_IN_NUM];
+    ai_buffer ai_output[AI_MNETWORK_OUT_NUM];
+
+    ai_float input[1] = {0};  // initial
+    ai_float output[1] = {0};
+
+    if (net_exec_ctx[idx].handle == AI_HANDLE_NULL)
+    {
+        printf("E: network handle is NULL\r\n");
+        return -1;
+    }
+
+    ai_input[0] = net_exec_ctx[idx].report.inputs[0];
+    ai_output[0] = net_exec_ctx[idx].report.outputs[0];
+
+//    ai_float test_data[] = {0, 1, 2, 3, 4, 5, 6, 7};
+
+    for (int i=0; i < 999; i++)
+    {
+    	input[0] = rand()%20 - 15;  // 随机生成[-10, 10] 的值
+    	output[0] = 0;
+    	ai_input[0].data = AI_HANDLE_PTR(input);
+    	ai_output[0].data = AI_HANDLE_PTR(output);
+    	batch = ai_mnetwork_run(net_exec_ctx[idx].handle, &ai_input[0], &ai_output[0]);
+    	if (batch != 1)
+    	{
+    		aiLogErr(ai_mnetwork_get_error(net_exec_ctx[idx].handle),
+    				"ai_mnetwork_run");
+    		break;
+    	}
+    	y_pred = 6 * input[0] + 10;
+    	printf("input  : %.2f \r\n", input[0]);
+    	printf("y_pre  : %.2f \r\n", output[0]);
+    	printf("y_true : %d \r\n", y_pred);
+    	printf("\r\n===========================\r\n\r\n\r\n");
+    	HAL_Delay(5000);
+    }
+}
+```
+
+运行成功的截图:
+
+![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200708190115.png)
+
+# 0x05 参考文章
 
 - [STM32CubeMX系列教程](https://www.strongerhuang.com/categories/STM32CubeMX系列教程/)
 - [Tensorflow 2.0 中模型构建的三种方式](https://blog.csdn.net/weixin_42264234/article/details/103946960)
