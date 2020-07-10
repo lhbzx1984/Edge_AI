@@ -63,7 +63,7 @@
 在本次实验中我选择了最简单的一个线性回归( Linear Regression) Tensor Flow2 Demo 作为示例，模型相关源文件说明如下：
 
 - `tf2_linear_regression.ipynb` 内含三种不同方式搭建网络结构
-- `tf2_线性回归_扩展.ipynb` 内含不同方式训练模型
+- `tf2_linear_regression_2.ipynb` 内含不同方式训练模型
 
 其中，在模型搭建的时候，重新温习了一下，有三种方式（各个方式的优缺点已经放在参考文章当中，感兴趣的同学自行查阅）：
 
