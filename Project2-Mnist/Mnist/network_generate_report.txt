@@ -1,0 +1,123 @@
+Neural Network Tools for STM32 v1.3.0 (AI tools v5.1.1)
+Created date       : 2020-07-17 20:41:20
+Parameters         : generate --name network -m /home/lebhoryi/RT-Thread/Edge_AI/Project2-Mnist/model/mnist.h5 --type keras --compression 8 --verbosity 1 --workspace /tmp/mxAI_workspace12547648642294264544345005627934 --output /home/lebhoryi/.stm32cubemx/stm32ai_output
+
+Exec/report summary (generate dur=0.40s err=0)
+------------------------------------------------------------------------------------------------------------------------
+model file         : /home/lebhoryi/RT-Thread/Edge_AI/Project2-Mnist/model/mnist.h5
+type               : keras (keras_dump) - tf.keras 2.2.4-tf
+c_name             : network
+compression        : 8
+quantize           : None
+workspace dir      : /tmp/mxAI_workspace12547648642294264544345005627934
+output dir         : /home/lebhoryi/.stm32cubemx/stm32ai_output
+
+model_name         : mnist
+model_hash         : afab06c9e97a5859bd4f17e4b26ab6ab
+input              : input_0 [784 items, 3.06 KiB, ai_float, FLOAT32, (28, 28, 1)]
+inputs (total)     : 3.06 KiB
+output             : dense_nl [10 items, 40 B, ai_float, FLOAT32, (10,)]
+outputs (total)    : 40 B
+params #           : 2,346 items (9.16 KiB)
+macc               : 68,522
+weights (ro)       : 2,448 B (2.39 KiB) (-73.91%) 
+activations (rw)   : 3,728 B (3.64 KiB) 
+ram (total)        : 6,904 B (6.74 KiB) = 3,728 + 3,136 + 40
+
+------------------------------------------------------------------------------------------------------------------------
+id  layer (type)            output shape      param #     connected to             macc           rom                
+------------------------------------------------------------------------------------------------------------------------
+0   input_0 (Input)         (28, 28, 1)                                                                              
+    conv1 (Conv2D)          (26, 26, 4)       40          input_0                  29,748         160                
+    conv1_nl (Nonlinearity) (26, 26, 4)                   conv1                                                      
+------------------------------------------------------------------------------------------------------------------------
+1   pool1 (Pool)            (13, 13, 4)                   conv1_nl                                                   
+------------------------------------------------------------------------------------------------------------------------
+2   conv2 (Conv2D)          (11, 11, 8)       296         pool1                    36,624         1,184              
+    conv2_nl (Nonlinearity) (11, 11, 8)                   conv2                                                      
+------------------------------------------------------------------------------------------------------------------------
+3   pool2 (Pool)            (5, 5, 8)                     conv2_nl                                                   
+------------------------------------------------------------------------------------------------------------------------
+5   flatten (Reshape)       (200,)                        pool2                                                      
+------------------------------------------------------------------------------------------------------------------------
+6   dense (Dense)           (10,)             2,010       flatten                  2,000          1,104 (c)          
+    dense_nl (Nonlinearity) (10,)                         dense                    150                               
+------------------------------------------------------------------------------------------------------------------------
+mnist p=2346(9.16 KBytes) macc=68522 rom=2.39 KBytes (-73.91%) ram=3.64 KiB io_ram=3.10 KiB
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name         : mnist
+c-name             : network
+c-node #           : 4
+c-array #          : 13
+activations size   : 3728
+weights size       : 2448
+macc               : 68522
+inputs             : ['input_0_output_array']
+outputs            : ['dense_nl_output_array']
+
+
+C-Arrays (13)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_array)   item/size           mem-pool     c-type       fmt        comment            
+------------------------------------------------------------------------------------------------------------------------
+0     conv2_scratch0   176/704             activations  float        float                         
+1     conv1_scratch0   208/832             activations  float        float                         
+2     dense_bias       10/40               weights      const float  float                         
+3     dense_weights    2000/1064           weights      const float  c8 (LUT4)                     
+4     conv2_bias       8/32                weights      const float  float                         
+5     conv2_weights    288/1152            weights      const float  float                         
+6     conv1_bias       4/16                weights      const float  float                         
+7     conv1_weights    36/144              weights      const float  float                         
+8     input_0_output   784/3136            user         float        float      /input             
+9     conv1_output     676/2704            activations  float        float                         
+10    conv2_output     200/800             activations  float        float                         
+11    dense_output     10/40               activations  float        float                         
+12    dense_nl_output  10/40               user         float        float      /output            
+------------------------------------------------------------------------------------------------------------------------
+
+
+C-Layers (4)
+------------------------------------------------------------------------------------------------------------------------
+c_id  name (*_layer)  id  type              macc        rom         tensors             shape (array id)                       
+------------------------------------------------------------------------------------------------------------------------
+0     conv1           0   optimized_conv2d  29748       160         I: input_0_output   [1, 28, 28, 1] (8)                     
+                                                                    S: conv1_scratch0                                          
+                                                                    W: conv1_weights                                           
+                                                                    W: conv1_bias                                              
+                                                                    O: conv1_output     [1, 13, 13, 4] (9)                     
+------------------------------------------------------------------------------------------------------------------------
+1     conv2           2   optimized_conv2d  36624       1184        I: conv1_output     [1, 13, 13, 4] (9)                     
+                                                                    S: conv2_scratch0                                          
+                                                                    W: conv2_weights                                           
+                                                                    W: conv2_bias                                              
+                                                                    O: conv2_output     [1, 5, 5, 8] (10)                      
+------------------------------------------------------------------------------------------------------------------------
+2     dense           6   dense             2000        1104        I: conv2_output0    [1, 1, 1, 200] (10)                    
+                                                                    W: dense_weights                                           
+                                                                    W: dense_bias                                              
+                                                                    O: dense_output     [1, 1, 1, 10] (11)                     
+------------------------------------------------------------------------------------------------------------------------
+3     dense_nl        6   nl                150         0           I: dense_output     [1, 1, 1, 10] (11)                     
+                                                                    O: dense_nl_output  [1, 1, 1, 10] (12)                     
+------------------------------------------------------------------------------------------------------------------------
+
+
+ 
+Complexity per-layer - macc=68,522 rom=2,448
+------------------------------------------------------------------------------------------------------------------------
+id      layer (type)            macc                                    rom                                    
+------------------------------------------------------------------------------------------------------------------------
+0       conv1 (Conv2D)          |||||||||||||||||||||||||        43.4%  |||||                             6.5% 
+2       conv2 (Conv2D)          |||||||||||||||||||||||||||||||  53.4%  |||||||||||||||||||||||||||||||  48.4% 
+6       dense (Dense)           ||                                2.9%  ||||||||||||||||||||||||||||     45.1% 
+6       dense_nl (Nonlinearity) |                                 0.2%  |                                 0.0% 
+------------------------------------------------------------------------------------------------------------------------
+
+
+Evaluation report (summary)
+------------------------------------------------------------
+NOT EVALUATED

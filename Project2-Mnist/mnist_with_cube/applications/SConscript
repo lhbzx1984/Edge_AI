@@ -1,0 +1,22 @@
+import rtconfig
+from building import *
+
+cwd     = GetCurrentDir()
+CPPPATH = [cwd, str(Dir('#'))]
+src     = Split("""
+main.c
+network.c
+network_data.c
+app_x-cube-ai.c
+""")
+
+# app_x-cube-ai.c
+# network.c
+
+path = [cwd]
+path += [cwd + '/ai_lib/Inc']
+path += [cwd + '/Inc']
+
+group = DefineGroup('Applications', src, depend = [''] ,CPPPATH = path)
+
+Return('group')
