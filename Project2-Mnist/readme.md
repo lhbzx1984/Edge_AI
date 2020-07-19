@@ -91,7 +91,7 @@ Restored model, accuracy: 96.51%
 
 ## 3.2 自定义测试集测试
 
-> 代码更改之处或者说参考之处: [./Mnist/aiSystemPerformance.c](./Mnist/aiSystemPerformance.c)
+> 代码更改之处或者说参考之处: [./Mnist_CMSIS/applications/aiSystemPerformance.c](./Mnist_CMSIS/applications/aiSystemPerformance.c)
 
 ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719151936.png)
 
@@ -128,7 +128,7 @@ Restored model, accuracy: 96.51%
 
   1. 勾选DSP 开关
 
-  ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719153357.png)
+  ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719180007.png)
 
   2. 增加宏定义 
 
