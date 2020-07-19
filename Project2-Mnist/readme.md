@@ -91,7 +91,7 @@ Restored model, accuracy: 96.51%
 
 ## 3.2 自定义测试集测试
 
-> 代码更改之处或者说参考之处: [./Mnist_CMSIS/applications/aiSystemPerformance.c](./Mnist_CMSIS/applications/aiSystemPerformance.c)
+> 代码更改之处或者说参考之处: [./Mnist/Src/aiSystemPerformance.c](./Mnist/Src/aiSystemPerformance.c)
 
 ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719151936.png)
 
