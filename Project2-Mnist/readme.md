@@ -140,3 +140,14 @@ Restored model, accuracy: 96.51%
 
   待补充
 
+## 5.2 CMSIS + RTT + Mnist scons 报错
+
+但是文件均已经存在
+
+![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719155954.png)
+
+- windows
+
+- linux
+
+  待补充
