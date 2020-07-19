@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    Fri Jul 17 20:41:20 2020
+  * @date    Sun Jul 19 09:22:30 2020
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -53,7 +53,7 @@
 #endif
 
 #undef AI_TOOLS_DATE_TIME
-#define AI_TOOLS_DATE_TIME   "Fri Jul 17 20:41:20 2020"
+#define AI_TOOLS_DATE_TIME   "Sun Jul 19 09:22:30 2020"
 
 #undef AI_TOOLS_COMPILE_TIME
 #define AI_TOOLS_COMPILE_TIME    __DATE__ " " __TIME__
@@ -130,7 +130,7 @@ AI_ARRAY_OBJ_DECLARE(
 
 /* Array#3 */
 AI_ARRAY_OBJ_DECLARE(
-  dense_weights_array, AI_ARRAY_FORMAT_LUT4_FLOAT,
+  dense_weights_array, AI_ARRAY_FORMAT_FLOAT,
   NULL, NULL, 2000, AI_STATIC)
 
 /* Array#4 */
@@ -204,7 +204,7 @@ AI_TENSOR_OBJ_DECLARE(
 AI_TENSOR_OBJ_DECLARE(
   dense_weights, AI_STATIC,
   0x0, 0x0,
-  AI_SHAPE_INIT(4, 200, 10, 1, 1), AI_STRIDE_INIT(4, 1, 100, 1000, 1000),
+  AI_SHAPE_INIT(4, 200, 10, 1, 1), AI_STRIDE_INIT(4, 4, 800, 8000, 8000),
   1, &dense_weights_array, NULL)
 
 /* Tensor #4 */
@@ -368,7 +368,7 @@ AI_LAYER_OBJ_DECLARE(
 AI_NETWORK_OBJ_DECLARE(
   AI_NET_OBJ_INSTANCE, AI_STATIC,
   AI_BUFFER_OBJ_INIT(AI_BUFFER_FORMAT_U8,
-                     1, 1, 2448, 1,
+                     1, 1, 9384, 1,
                      NULL),
   AI_BUFFER_OBJ_INIT(AI_BUFFER_FORMAT_U8,
                      1, 1, 3728, 1,
@@ -426,10 +426,10 @@ ai_bool network_configure_weights(
     /* Updating weights (byte) offsets */
     
     dense_bias_array.format |= AI_FMT_FLAG_CONST;
-    dense_bias_array.data = AI_PTR(weights + 2408);
-    dense_bias_array.data_start = AI_PTR(weights + 2408);
+    dense_bias_array.data = AI_PTR(weights + 9344);
+    dense_bias_array.data_start = AI_PTR(weights + 9344);
     dense_weights_array.format |= AI_FMT_FLAG_CONST;
-    dense_weights_array.data = AI_PTR(weights + 1408);
+    dense_weights_array.data = AI_PTR(weights + 1344);
     dense_weights_array.data_start = AI_PTR(weights + 1344);
     conv2_bias_array.format |= AI_FMT_FLAG_CONST;
     conv2_bias_array.data = AI_PTR(weights + 1312);

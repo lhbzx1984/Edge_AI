@@ -27,4 +27,4 @@ aiSystemPerformance.c:958:12:aiTestPerformance	264	static,ignoring_inline_asm
 aiSystemPerformance.c:1271:12:aiTestConsole	16	static
 aiSystemPerformance.c:1305:5:aiSystemPerformanceInit	8	static
 aiSystemPerformance.c:1335:5:aiSystemPerformanceProcess	3264	static
-aiSystemPerformance.c:1451:6:aiSystemPerformanceDeInit	8	static
+aiSystemPerformance.c:1460:6:aiSystemPerformanceDeInit	8	static
