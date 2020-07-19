@@ -91,7 +91,7 @@ Restored model, accuracy: 96.51%
 
 ## 3.2 自定义测试集测试
 
-> 代码更改之处或者说参考之处: [./Mnist/Src/aiSystemPerformance.c](./Mnist/Src/aiSystemPerformance.c)
+> 代码更改之处或者说参考之处: [./Mnist/Src/aiSystemPerformance.c](https://github.com/Lebhoryi/Edge_AI/blob/master/Project2-Mnist/Mnist/Src/aiSystemPerformance.c)
 
 ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719151936.png)
 
@@ -116,7 +116,7 @@ Restored model, accuracy: 96.51%
 3. 导入权重文件和测试样例
 4. 推理成功
 
-详细步骤请移步[./Mnist_CMSIS/README.MD](./Mnist_CMSIS/README.MD)
+详细步骤请移步[./Mnist_CMSIS/README.md](https://github.com/Lebhoryi/Edge_AI/blob/master/Project2-Mnist/Mnist_CMSIS/README.md)
 
 # 0x05 问题收集:
 
