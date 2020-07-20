@@ -1,3 +1,7 @@
+> - Summary: 在 RT-Thread 系统上执行 Mnist 推理，纯手搭版
+> - Author: lebhoryi@gmail.com & qiwen20150309@163.com
+> - Date: 2020/07/19
+
 [TOC]
 
 
@@ -21,11 +25,12 @@
 ├── data  # mnist 数据集
 ├── image  # 自定义测试集
 ├── Mnist  # STM32Cube AI 工程 | Linux
-├── Mnist_CMSIS  # CMSIS + RTT | 可直接scons
+├── Mnist-win.rar  # STM32Cube AI 工程 | Windows
+├── Mnist_CMSIS   # CMSIS + RTT | 可直接scons \ MDK 编译
+├── Mnist_CMSIS.7z  # Mnist_CMSIS 有520M, 建议下载压缩包,仅66.4M
 ├── mnist.ipynb  # 模型训练及验证
 ├── mnist\_with\_cube  # STM32Cube AI + RTT + Mnist (Doing)
 ├── model  # 模型储存
-├── Mnist-win.rar  # STM32Cube AI 工程 | Windows
 └── readme.md
 ```
 
