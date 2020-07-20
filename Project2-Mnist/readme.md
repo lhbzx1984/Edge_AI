@@ -136,18 +136,42 @@ Restored model, accuracy: 96.51%
 
   ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719153523.png)
 
-- linux 
+- linux:
 
-  待补充
+  1. 先解决找不到`math.h` 
+
+     在`./Mnist_CMSIS/packages/CMSIS-latest/SConscript` 文件中,第15行, 手动添加`DSP`, 新增:
+
+     ```python
+     CPPPATH = CPPPATH + [cwd + '/CMSIS_5/CMSIS/DSP/Include']
+     ```
+
+     ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200720094726.png)
+
+  2. `scons` 之后会报这样一个错误:
+
+     ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200720092740.png)
+
+     ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200720094050.png)
+
+     解决方式如下: 
+
+     在`./Mnist_CMSIS/board/SConscript` 文件下, 第22行, 改为:
+
+     ```python
+     CPPDEFINES = ['STM32H743xx','ARM_MATH_CM7','__FPU_PRESENT']
+     ```
+
+     ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200720095205.png)
 
 ## 5.2 CMSIS + RTT + Mnist scons 报错
 
-但是文件均已经存在
+> 但是文件均已经存在
 
 ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719155954.png)
 
-- windows
+解决:
 
-- linux
+在`./Mnist_CMSIS/SConscript` 下面, 改为如图所示
 
-  待补充
+![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200720101650.png)
