@@ -1,91 +1,109 @@
-## 1 实验步骤
+# STM32H743-st-nucleo 开发板 BSP 说明
 
-1. 保存权重文件
-2. 调用 CMSIS 库, 复现神经网络, 文件为`.c` 类文件
-3. 导入权重文件和测试样例
-4. 推理成功
+## 简介
 
-## 2 保存权重文件并读取
+本文档为 tyustli 为 STM32H743-st-nucleo 开发板提供的 BSP (板级支持包) 说明。
 
-- 权重文件保存 & 验证
+主要内容如下：
 
-  ```python
-  # save weights
-  model.save_weights(model_path / 'model_weights.h5')
-  
-  # load weights
-  model.load_weights(model_path / 'model_weights.h5')
-  
-  model.compile(optimizer='adam',
-               loss='sparse_categorical_crossentropy',
-               metrics=['accuracy',])
-  loss, acc = model.evaluate(x_test, y_test)
-  print("Restored model, accuracy: {:5.2f}%".format(100*acc))
-  ```
+- 开发板资源介绍
+- BSP 快速上手
+- 进阶使用方法
 
-  ```shel
-  313/313 [==============================] - 1s 2ms/step - loss: 0.1226 - accuracy: 0.9651
-  Restored model, accuracy: 96.51%
-  ```
+通过阅读快速上手章节开发者可以快速地上手该 BSP，将 RT-Thread 运行在开发板上。在进阶使用指南章节，将会介绍更多高级功能，帮助开发者利用 RT-Thread 驱动更多板载资源。
 
-- 权重文件读取
+## 开发板介绍
 
-  ```python
-  # 读取权重 h5 文件
-  import h5py
-  
-  weights_file = model_path / 'model_weights.h5'
-  weights_txt = model_path / 'model_weights_int.txt'
-  
-  def traverse_datasets(hdf_file):
-      def h5py_dataset_iterator(g, prefix=''):
-          for key in g.keys():
-              item = g[key]
-              path = f'{prefix}/{key}'
-              if isinstance(item, h5py.Dataset): # test for dataset
-                  yield (path, item)
-              elif isinstance(item, h5py.Group): # test for group (go down)
-                  yield from h5py_dataset_iterator(item, path)
-  
-      for path, _ in h5py_dataset_iterator(hdf_file):
-          yield path
-          
-  h5_f = h5py.File(weights_file, 'r')
-  with open(weights_txt, 'w+') as f:
-      for dset in traverse_datasets(h5_f):
-          weight = h5_f[dset].value * 2**7
-          weight = weight.flatten()
-          weight = weight.astype(np.int32)
-          f.write(h5_f[dset].name + " : ")
-          f.write(str(weight.tolist()))
-          f.write('\n\n')
-          
-  h5_f.close()
-  ```
+STM32H743 是 ST 推出的一款基于 ARM Cortex-M7 内核的开发板，最高主频为 400Mhz，该开发板具有丰富的板载资源，可以充分发挥 STM32H743 的芯片性能。
 
-## 3 网络重构
+开发板外观如下图所示：
 
-通过调用CMSIS API, 实现网络重构, 此步骤需要一定的深度学习基础,
+![board](figures/board.jpg)
 
-感兴趣的可以阅读源文件
+该开发板常用 **板载资源** 如下：
 
-- [./Mnist_CMSIS/applications/main.c](./Mnist_CMSIS/applications/main.c)
-- [./Mnist_CMSIS/applications/mnist_parameters.h](./Mnist_CMSIS/applications/mnist_parameters.h)
+- MCU：STM32H743，主频 400MHz，2MB FLASH ，1MB RAM
+- 常用接口：USB 转串口、以太网接口、arduino 接口等
+- 调试接口，标准 JTAG/SWD
 
-其他文件并无做任何改动
+开发板更多详细信息请参考 ST [STM32H743](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)。
 
-## 4 编译 & 烧录
+## 外设支持
 
-- Windows 
+本 BSP 目前对外设的支持情况如下：
 
-  MDK 一键编译一键烧录, 时间略久, 通过 Putty 观察输出情况
+| **板载外设**      | **支持情况** | **备注**                              |
+| :----------------- | :----------: | :------------------------------------- |
+| USB 转串口        |     支持     |  
+| **片上外设**      | **支持情况** | **备注**                              |
+| GPIO              |     支持     | |
+| UART              |     支持     |   UART3                                   |
 
-- Linux
 
-  `scons` 编译, 通过`STM32 Cube Programmer` 烧录, `minicom` 观察输出情况
+## 使用说明
 
----
+使用说明分为如下两个章节：
 
-> CMSIS + RTT 推理成功界面
+- 快速上手
 
-![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719151207.png)
+    本章节是为刚接触 RT-Thread 的新手准备的使用说明，遵循简单的步骤即可将 RT-Thread 操作系统运行在该开发板上，看到实验效果 。
+
+- 进阶使用
+
+    本章节是为需要在 RT-Thread 操作系统上使用更多开发板资源的开发者准备的。通过使用 ENV 工具对 BSP 进行配置，可以开启更多板载资源，实现更多高级功能。
+
+
+### 快速上手
+
+本 BSP 为开发者提供 MDK5 和 IAR 工程，并且支持 GCC 开发环境。下面以 MDK5 开发环境为例，介绍如何将系统运行起来。
+
+#### 硬件连接
+
+使用数据线连接开发板到 PC，打开电源开关。
+
+#### 编译下载
+
+双击 project.uvprojx 文件，打开 MDK5 工程，编译并下载程序到开发板。
+
+> 工程默认配置使用 ST_LINK 仿真器下载程序，在通过 ST_LINK 连接开发板的基础上，点击下载按钮即可下载程序到开发板
+
+#### 运行结果
+
+下载程序成功之后，系统会自动运行，LED闪烁。
+
+连接开发板对应串口到 PC , 在终端工具里打开相应的串口（115200-8-1-N），复位设备后，可以看到 RT-Thread 的输出信息:
+
+```bash
+ \ | /
+- RT -     Thread Operating System
+ / | \     4.0.1 build Mar 5 2019
+ 2006 - 2019 Copyright by rt-thread team
+msh >
+```
+### 进阶使用
+
+此 BSP 默认只开启了 GPIO 和 串口3 的功能，如果需使用更多高级功能，需要利用 ENV 工具对BSP 进行配置，步骤如下：
+
+1. 在 bsp 下打开 env 工具。
+
+2. 输入`menuconfig`命令配置工程，配置好之后保存退出。
+
+3. 输入`pkgs --update`命令更新软件包。
+
+4. 输入`scons --target=mdk4/mdk5/iar` 命令重新生成工程。
+
+本章节更多详细的介绍请参考 [STM32 系列 BSP 外设驱动使用教程](../docs/STM32系列BSP外设驱动使用教程.md)。
+
+## 注意事项
+
+- 调试串口为串口3 映射说明
+
+    PD8     ------> USART3_TX
+
+    PD9     ------> USART3_RX 
+
+## 联系人信息
+
+维护人:
+
+-  [tyustli](https://github.com/tyustli)
