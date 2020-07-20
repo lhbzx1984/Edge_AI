@@ -20,11 +20,12 @@
 ├── cpp_pytorch_mnist  # pytorch cpp 实现 mnist 训练 (Doing)
 ├── data  # mnist 数据集
 ├── image  # 自定义测试集
-├── Mnist  # STM32Cube AI 工程 | linux
-├── Mnist_CMSIS  # CMSIS + RTT | LInux
+├── Mnist  # STM32Cube AI 工程 | Linux
+├── Mnist_CMSIS  # CMSIS + RTT | 可直接scons
 ├── mnist.ipynb  # 模型训练及验证
-├── mnist_with_cube  # STM32Cube AI + RTT + Mnist (Doing)
+├── mnist\_with\_cube  # STM32Cube AI + RTT + Mnist (Doing)
 ├── model  # 模型储存
+├── Mnist-win.rar  # STM32Cube AI 工程 | Windows
 └── readme.md
 ```
 
@@ -91,7 +92,7 @@ Restored model, accuracy: 96.51%
 
 ## 3.2 自定义测试集测试
 
-> 代码更改之处或者说参考之处: [./Mnist/aiSystemPerformance.c](./Mnist/aiSystemPerformance.c)
+> 代码更改之处或者说参考之处: [./Mnist/Src/aiSystemPerformance.c](https://github.com/Lebhoryi/Edge_AI/blob/master/Project2-Mnist/Mnist/Src/aiSystemPerformance.c)
 
 ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719151936.png)
 
@@ -116,7 +117,7 @@ Restored model, accuracy: 96.51%
 3. 导入权重文件和测试样例
 4. 推理成功
 
-详细步骤请移步[./Mnist_CMSIS/README.MD](./Mnist_CMSIS/README.MD)
+详细步骤请移步[./Mnist_CMSIS/README.md](https://github.com/Lebhoryi/Edge_AI/blob/master/Project2-Mnist/Mnist_CMSIS/README.md)
 
 # 0x05 问题收集:
 
@@ -128,7 +129,7 @@ Restored model, accuracy: 96.51%
 
   1. 勾选DSP 开关
 
-  ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719153357.png)
+  ![](https://gitee.com/lebhoryi/PicGoPictureBed/raw/master/img/20200719180007.png)
 
   2. 增加宏定义 
 
