@@ -13,8 +13,8 @@
 #include <board.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "arm_math.h"
-#include "arm_nnfunctions.h"
+#include <arm_math.h>
+#include <arm_nnfunctions.h>
 #include "mnist_parameters.h"
 #include "inputdata.h"
 
@@ -41,6 +41,7 @@ q7_t data[784] = IMG5_1;
 int main(void)
 {
     uint8_t index = 0;
+    
     // output data
     q7_t output_data[FC1_OUT] = {0};
 
