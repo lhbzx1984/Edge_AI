@@ -20,11 +20,12 @@
 ├── cpp_pytorch_mnist  # pytorch cpp 实现 mnist 训练 (Doing)
 ├── data  # mnist 数据集
 ├── image  # 自定义测试集
-├── Mnist  # STM32Cube AI 工程 | linux
-├── Mnist_CMSIS  # CMSIS + RTT | LInux
+├── Mnist  # STM32Cube AI 工程 | Linux
+├── Mnist_CMSIS  # CMSIS + RTT | 可直接scons
 ├── mnist.ipynb  # 模型训练及验证
-├── mnist_with_cube  # STM32Cube AI + RTT + Mnist (Doing)
+├── mnist\_with\_cube  # STM32Cube AI + RTT + Mnist (Doing)
 ├── model  # 模型储存
+├── Mnist-win.rar  # STM32Cube AI 工程 | Windows
 └── readme.md
 ```
 
